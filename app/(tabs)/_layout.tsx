@@ -1,45 +1,67 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
-import { Platform } from 'react-native';
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import React from "react";
+import { Platform } from "react-native";
+import {
+  AntDesign,
+  Entypo,
+  EvilIcons,
+  FontAwesome5,
+  Fontisto,
+  Ionicons,
+  Octicons,
+  SimpleLineIcons,
+} from "@expo/vector-icons";
+import { Colors } from "@/constants/Colors";
+import HomeScreen from "./All";
+import Filter from "./Filter";
+import Options from "./Options";
 
-import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
-
+const Tabs = createBottomTabNavigator();
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
   return (
-    <Tabs
+    <Tabs.Navigator
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarActiveTintColor: "light",
         headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
         tabBarStyle: Platform.select({
           ios: {
             // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
+            position: "absolute",
           },
           default: {},
         }),
-      }}>
+      }}
+    >
       <Tabs.Screen
-        name="index"
+        name="All"
+        component={HomeScreen}
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          title: "All",
+          tabBarIcon: ({ color }) => (
+            <AntDesign name="home" size={24} color={color} />
+          ),
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="Filter"
+        component={Filter}
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          title: "Filter",
+          tabBarIcon: ({ color }) => (
+            <Entypo name="magnifying-glass" color={color} size={24} />
+          ),
         }}
       />
-    </Tabs>
+      <Tabs.Screen
+        name="Options"
+        component={Options}
+        options={{
+          title: "Opções",
+          tabBarIcon: ({ color }) => (
+            <Octicons name="gear" color={color} size={24} />
+          ),
+        }}
+      />
+    </Tabs.Navigator>
   );
 }
