@@ -10,7 +10,7 @@ export default function HomeScreen() {
   const navigation = useNavigation();
 
   return (
-    <Box safeAreaTop bg={"grey"} height={"100%"}>
+    <Box safeAreaTop bg={blueColor} height={"100%"}>
       <HeaderComp title={"All Categorys"} />
       <ScrollView height={"100%"}>
         {categorys.map((category, index) => (

@@ -15,6 +15,7 @@ import { Colors } from "@/constants/Colors";
 import HomeScreen from "./All";
 import Filter from "./Filter";
 import Options from "./Options";
+import { Box } from "native-base";
 
 const Tabs = createBottomTabNavigator();
 export default function TabLayout() {
@@ -28,6 +29,10 @@ export default function TabLayout() {
             // Use a transparent background on iOS to show the blur effect
             position: "absolute",
           },
+          android: {
+            position: "absolute",
+            borderTopWidth: 0,
+          },
           default: {},
         }),
       }}
@@ -37,6 +42,7 @@ export default function TabLayout() {
         component={HomeScreen}
         options={{
           title: "All",
+          animation: "fade",
           tabBarIcon: ({ color }) => (
             <AntDesign name="home" size={24} color={color} />
           ),
@@ -47,6 +53,7 @@ export default function TabLayout() {
         component={Filter}
         options={{
           title: "Filter",
+          animation: "fade",
           tabBarIcon: ({ color }) => (
             <Entypo name="magnifying-glass" color={color} size={24} />
           ),
@@ -57,6 +64,7 @@ export default function TabLayout() {
         component={Options}
         options={{
           title: "Opções",
+          animation: "fade",
           tabBarIcon: ({ color }) => (
             <Octicons name="gear" color={color} size={24} />
           ),

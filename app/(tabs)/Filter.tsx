@@ -3,10 +3,12 @@ import { StyleSheet, TouchableOpacity } from "react-native";
 import { blueColor } from "@/constants/Colors";
 import HeaderComp from "@/components/home/HeaderComp";
 import { categorys } from "@/constants/consts";
+import { useNavigation } from "expo-router";
 
 export default function Filter() {
+  const navigation = useNavigation();
   return (
-    <Box height={"100%"} bgColor={"grey"} safeAreaTop>
+    <Box height={"100%"} bgColor={blueColor} safeAreaTop>
       <HeaderComp title={"Filter"} />
       <Text style={styles.title}>Select Category</Text>
       <Center marginTop={10}>
@@ -14,8 +16,15 @@ export default function Filter() {
           data={categorys}
           renderItem={({ item }) => {
             return (
-              <TouchableOpacity>
-                <Text>{item}</Text>
+              <TouchableOpacity
+                style={{ margin: 15 }}
+                onPress={() =>
+                  navigation.navigate("OneCategory", { category: item })
+                }
+              >
+                <Center style={styles.button}>
+                  <Text style={{ fontSize: 20 }}>{item}</Text>
+                </Center>
               </TouchableOpacity>
             );
           }}
@@ -34,5 +43,11 @@ const styles = StyleSheet.create({
     color: "white",
     height: "auto",
     alignSelf: "center",
+  },
+  button: {
+    backgroundColor: "white",
+    elevation: 10,
+    borderRadius: 10,
+    padding: 15,
   },
 });
