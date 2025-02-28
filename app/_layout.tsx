@@ -18,6 +18,7 @@ import TabLayout from "./(tabs)/_layout";
 import { NativeBaseProvider } from "native-base";
 import AddNewItem from "./AddNewItem";
 import OneCategory from "./OneCategory";
+import AddCategorys from "./AddCategorys";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 const Stack = createNativeStackNavigator();
@@ -40,6 +41,11 @@ export default function RootLayout() {
             <Stack.Screen
               name="AddNewItem"
               component={AddNewItem}
+              options={{ headerShown: false }}
+            />
+             <Stack.Screen
+              name="AddCategorys"
+              component={AddCategorys}
               options={{ headerShown: false }}
             />
           </Stack.Navigator>
