@@ -1,17 +1,34 @@
 import { View, Text, StyleSheet } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Box, FlatList, ScrollView } from "native-base";
 import { blueColor } from "@/constants/Colors";
 import BackHeaderComp from "@/components/BackHeaderComp";
 import { to_Do } from "@/constants/consts";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const OneCategory = ({ route }) => {
   const category = route.params.category;
+  const [allItems, setAllItems] = useState([]);
+
+  useEffect(() => {
+    const loadItems = async () => {
+      try {
+        const storedItems = await AsyncStorage.getItem("to_Dos");
+        if (storedItems) {
+          setAllItems(JSON.parse(storedItems));
+        }
+      } catch (error) {
+        console.error("Erro ao carregar itens:", error);
+      }
+    };
+
+    loadItems();
+  }, []);
   return (
     <Box bg={blueColor} height={"100%"}>
       <BackHeaderComp title={`All ${category}`} />
       <FlatList
-        data={to_Do.filter((item) => item.category === category)}
+        data={allItems.filter((item) => item.category === category)}
         renderItem={({ item }) => {
           return (
             <Box style={styles.whiteBox}>

@@ -1,55 +1,140 @@
-import { StyleSheet, Text, TouchableOpacity } from "react-native";
-import { Box, ScrollView, FlatList, View, Center } from "native-base";
-import { to_Do, categorys } from "@/constants/consts";
-import HeaderComp from "@/components/home/HeaderComp";
+import { StyleSheet, Text, TouchableOpacity, Modal, Alert } from "react-native";
+import { Box, ScrollView, FlatList, View, Center, Button, VStack } from "native-base";
 import { AntDesign } from "@expo/vector-icons";
-import { useNavigation } from "expo-router";
+import { useFocusEffect, useNavigation } from "expo-router";
 import { blueColor } from "@/constants/Colors";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useCallback, useEffect, useState } from "react";
+import HeaderComp from "@/components/home/HeaderComp";
 
 export default function HomeScreen() {
   const navigation = useNavigation();
+  const [asyncCategorys, setAsyncCategorys] = useState([]);
+  const [allItems, setAllItems] = useState([]);
+  const [selectedItem, setSelectedItem] = useState(null); // Armazena o item a ser removido
+  const [modalVisible, setModalVisible] = useState(false); // Controle do modal
+
+  useFocusEffect(
+    useCallback(() => {
+      const loadCategories = async () => {
+        try {
+          const storedCategorys = await AsyncStorage.getItem("categorias");
+          if (storedCategorys) {
+            setAsyncCategorys(JSON.parse(storedCategorys));
+          }
+        } catch (error) {
+          console.error("Erro ao carregar categorias:", error);
+        }
+      };
+
+      const loadItems = async () => {
+        try {
+          const storedItems = await AsyncStorage.getItem("to_Dos");
+          if (storedItems) {
+            setAllItems(JSON.parse(storedItems));
+          }
+        } catch (error) {
+          console.error("Erro ao carregar itens:", error);
+        }
+      };
+
+      loadCategories();
+      loadItems();
+    }, [])
+  );
+
+  const removeItem = async () => {
+    if (!selectedItem) return;
+
+    try {
+      const updatedItems = allItems.filter((item) => item.id !== selectedItem.id);
+      await AsyncStorage.setItem("to_Dos", JSON.stringify(updatedItems));
+      setAllItems(updatedItems);
+      setModalVisible(false);
+      Alert.alert("Sucesso", "Item removido com sucesso!");
+    } catch (error) {
+      console.error("Erro ao remover item:", error);
+    }
+  };
 
   return (
     <Box safeAreaTop bg={blueColor} height={"100%"}>
       <HeaderComp title={"All Categorys"} />
-      <ScrollView height={"100%"}>
-        {categorys.map((category, index) => (
-          <Box>
-            <Text style={styles.title}>{category}</Text>
-            <FlatList
-              data={to_Do.filter((item) => item.category === category)}
-              key={Math.floor(Math.random() * 100)}
-              renderItem={({ item }) => {
-                return (
-                  <Box style={styles.whiteBox}>
-                    <Text>{item.title}</Text>
-                    <Text style={styles.description}>{item.description}</Text>
-                  </Box>
-                );
-              }}
-              horizontal={true}
-              ListHeaderComponent={() => <View style={{ width: 10 }} />}
-              ListFooterComponent={() => (
-                <Center alignSelf={"center"} top={5} marginX={10}>
-                  <TouchableOpacity
-                    onPress={() =>
-                      navigation.navigate("AddNewItem", { category: category })
-                    }
-                  >
-                    <AntDesign
-                      name="pluscircle"
-                      size={60}
-                      color="white"
-                      style={{ alignSelf: "center" }}
-                    />
-                  </TouchableOpacity>
-                </Center>
-              )}
-              showsHorizontalScrollIndicator={false}
-            ></FlatList>
-          </Box>
-        ))}
+      <ScrollView height={"100%"} marginBottom={10}>
+        <Box marginBottom={10}>
+          {asyncCategorys.length === 0 ? (
+            <Center>
+              <Text style={styles.title}>Ainda sem categorias adicionadas</Text>
+              <Text style={styles.title}>
+                Adicione uma categoria nas página de Opções
+              </Text>
+            </Center>
+          ) : (
+            asyncCategorys.map((category, index) => (
+              <Box key={index}>
+                <Text style={styles.title}>{category}</Text>
+                <FlatList
+                  height={120}
+                  data={allItems.filter((item) => item.category === category)}
+                  keyExtractor={(item, idx) => idx.toString()}
+                  renderItem={({ item }) => (
+                    <TouchableOpacity
+                      onPress={() => {
+                        setSelectedItem(item);
+                        setModalVisible(true);
+                      }}
+                    >
+                      <Box style={styles.whiteBox}>
+                        <Text>{item.title}</Text>
+                        <Text style={styles.description}>{item.description}</Text>
+                      </Box>
+                    </TouchableOpacity>
+                  )}
+                  horizontal={true}
+                  ListHeaderComponent={() => <View style={{ width: 10 }} />}
+                  ListFooterComponent={() => (
+                    <Center alignSelf={"center"} top={5} marginX={10}>
+                      <TouchableOpacity
+                        onPress={() =>
+                          navigation.navigate("AddNewItem", {
+                            category: category,
+                          })
+                        }
+                      >
+                        <AntDesign
+                          name="pluscircle"
+                          size={60}
+                          color="white"
+                          style={{ alignSelf: "center" }}
+                        />
+                      </TouchableOpacity>
+                    </Center>
+                  )}
+                  showsHorizontalScrollIndicator={false}
+                />
+              </Box>
+            ))
+          )}
+        </Box>
       </ScrollView>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <Center flex={1} bg="rgba(0,0,0,0.5)">
+          <Box bg="white" p={5} borderRadius={10} alignItems="center">
+            <Text style={styles.modalText}>Deseja remover este item?</Text>
+            <Text style={styles.description}>{selectedItem?.title}</Text>
+            <VStack space={4} mt={5}>
+              <Button onPress={removeItem} colorScheme="red">Remover</Button>
+              <Button onPress={() => setModalVisible(false)}>Cancelar</Button>
+            </VStack>
+          </Box>
+        </Center>
+      </Modal>
     </Box>
   );
 }
@@ -81,5 +166,10 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: "black",
     maxWidth: 300,
+  },
+  modalText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
   },
 });

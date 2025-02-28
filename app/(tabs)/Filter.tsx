@@ -3,17 +3,38 @@ import { StyleSheet, TouchableOpacity } from "react-native";
 import { blueColor } from "@/constants/Colors";
 import HeaderComp from "@/components/home/HeaderComp";
 import { categorys } from "@/constants/consts";
-import { useNavigation } from "expo-router";
+import { useFocusEffect, useNavigation } from "expo-router";
+import { useCallback, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Filter() {
   const navigation = useNavigation();
+  const [asyncCategorys, setAsyncCategorys] = useState([]);
+
+  useFocusEffect(
+    useCallback(() => {
+      const loadCategories = async () => {
+        try {
+          const storedCategorys = await AsyncStorage.getItem("categorias");
+          if (storedCategorys) {
+            setAsyncCategorys(JSON.parse(storedCategorys));
+          }
+        } catch (error) {
+          console.error("Erro ao carregar categorias:", error);
+        }
+      };
+
+      loadCategories();
+    }, [])
+  );
+
   return (
     <Box height={"100%"} bgColor={blueColor} safeAreaTop>
       <HeaderComp title={"Filter"} />
       <Text style={styles.title}>Select Category</Text>
       <Center marginTop={10}>
         <FlatList
-          data={categorys}
+          data={asyncCategorys}
           renderItem={({ item }) => {
             return (
               <TouchableOpacity
