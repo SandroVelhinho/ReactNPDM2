@@ -12,7 +12,7 @@
 2. Start the app
 
    ```bash
-    npx expo start
+    npm start
    ```
 
 3. Abrir projeto da forma desejada (Recomendado: utilização de emulador android ou ios)
