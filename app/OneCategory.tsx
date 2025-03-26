@@ -26,7 +26,7 @@ const OneCategory = ({ route }) => {
   }, []);
   return (
     <Box bg={blueColor} height={"100%"}>
-      <BackHeaderComp title={`All ${category}`} />
+      <BackHeaderComp title={`Todos os Itens de ${category}`} />
       <FlatList
         data={allItems.filter((item) => item.category === category)}
         renderItem={({ item }) => {

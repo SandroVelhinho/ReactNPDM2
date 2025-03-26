@@ -41,7 +41,7 @@ export default function TabLayout() {
         name="All"
         component={HomeScreen}
         options={{
-          title: "All",
+          title: "Todos",
           animation: "fade",
           tabBarIcon: ({ color }) => (
             <AntDesign name="home" size={24} color={color} />
@@ -52,7 +52,7 @@ export default function TabLayout() {
         name="Filter"
         component={Filter}
         options={{
-          title: "Filter",
+          title: "Filtro",
           animation: "fade",
           tabBarIcon: ({ color }) => (
             <Entypo name="magnifying-glass" color={color} size={24} />

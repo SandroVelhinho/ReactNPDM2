@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { Modal, TextInput } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Box, Button, FlatList, HStack, Center, Text } from "native-base";
-import { blueColor } from "@/constants/Colors";
+import { blueColor, darkBlueColor } from "@/constants/Colors";
 import BackHeaderComp from "@/components/BackHeaderComp";
 
 const AddCategorys = () => {
@@ -59,8 +59,22 @@ const AddCategorys = () => {
   return (
     <Box safeAreaTop bg={blueColor} height={"100%"} p={4}>
       <BackHeaderComp title={"Editar Categorias"} />
-      <Button onPress={handleCategoryAdd} mt={2}>
-        Add Category
+      <Button
+        onPress={handleCategoryAdd}
+        mt={2}
+        style={{
+          backgroundColor: darkBlueColor,
+          width: 400,
+          alignSelf: "center",
+          marginVertical: 40,
+          borderRadius: 25,
+          shadowOffset: { width: 0, height: 4 },
+          shadowOpacity: 0.3,
+          shadowRadius: 5,
+          elevation: 6,
+        }}
+      >
+        Adicionar Categoria
       </Button>
       {categorysArray.length === 0 ? (
         <Text
@@ -97,8 +111,11 @@ const AddCategorys = () => {
                 >
                   {item}
                 </Text>
-                <Button onPress={() => handleCategoryRemove(item)}>
-                  Delete
+                <Button
+                  onPress={() => handleCategoryRemove(item)}
+                  style={{ backgroundColor: "red" }}
+                >
+                  Remover
                 </Button>
               </HStack>
             </Center>

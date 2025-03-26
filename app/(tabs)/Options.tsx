@@ -22,7 +22,7 @@ const Options = () => {
 
   return (
     <Box safeAreaTop bg={blueColor} height={"100%"}>
-      <HeaderComp title={"All Categorys"} />
+      <HeaderComp title={"Opções"} />
       <ScrollView height={"100%"}>
         <OptionViewConstuctor
           navigate={"AddCategorys"}

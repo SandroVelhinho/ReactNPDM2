@@ -30,8 +30,8 @@ export default function Filter() {
 
   return (
     <Box height={"100%"} bgColor={blueColor} safeAreaTop>
-      <HeaderComp title={"Filter"} />
-      <Text style={styles.title}>Select Category</Text>
+      <HeaderComp title={"Filtrar"} />
+      <Text style={styles.title}>Escolha uma categoria</Text>
       <Center marginTop={10}>
         <FlatList
           data={asyncCategorys}

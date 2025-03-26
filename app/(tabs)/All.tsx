@@ -10,7 +10,7 @@ import {
 } from "native-base";
 import { AntDesign } from "@expo/vector-icons";
 import { useFocusEffect, useNavigation } from "expo-router";
-import { blueColor } from "@/constants/Colors";
+import { blueColor, darkBlueColor } from "@/constants/Colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useCallback, useEffect, useState } from "react";
 import HeaderComp from "@/components/home/HeaderComp";
@@ -69,7 +69,7 @@ export default function HomeScreen() {
 
   return (
     <Box safeAreaTop bg={blueColor} height={"100%"}>
-      <HeaderComp title={"All Categorys"} />
+      <HeaderComp title={"Todos os Itens"} />
       <ScrollView height={"100%"} marginBottom={10}>
         <Box marginBottom={10}>
           {asyncCategorys.length === 0 ? (
@@ -85,7 +85,18 @@ export default function HomeScreen() {
             </Center>
           ) : (
             asyncCategorys.map((category, index) => (
-              <Box key={index}>
+              <Box
+                key={index}
+                bg={darkBlueColor}
+                marginY={5}
+                style={{
+                  shadowColor: "#000",
+                  shadowOffset: { width: 0, height: 4 },
+                  shadowOpacity: 0.3,
+                  shadowRadius: 5,
+                  elevation: 20,
+                }}
+              >
                 <Text style={styles.title}>{category}</Text>
                 <FlatList
                   height={120}
