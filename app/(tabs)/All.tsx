@@ -1,5 +1,13 @@
 import { StyleSheet, Text, TouchableOpacity, Modal, Alert } from "react-native";
-import { Box, ScrollView, FlatList, View, Center, Button, VStack } from "native-base";
+import {
+  Box,
+  ScrollView,
+  FlatList,
+  View,
+  Center,
+  Button,
+  VStack,
+} from "native-base";
 import { AntDesign } from "@expo/vector-icons";
 import { useFocusEffect, useNavigation } from "expo-router";
 import { blueColor } from "@/constants/Colors";
@@ -47,7 +55,9 @@ export default function HomeScreen() {
     if (!selectedItem) return;
 
     try {
-      const updatedItems = allItems.filter((item) => item.id !== selectedItem.id);
+      const updatedItems = allItems.filter(
+        (item) => item.id !== selectedItem.id
+      );
       await AsyncStorage.setItem("to_Dos", JSON.stringify(updatedItems));
       setAllItems(updatedItems);
       setModalVisible(false);
@@ -64,10 +74,14 @@ export default function HomeScreen() {
         <Box marginBottom={10}>
           {asyncCategorys.length === 0 ? (
             <Center>
-              <Text style={styles.title}>Ainda sem categorias adicionadas</Text>
-              <Text style={styles.title}>
-                Adicione uma categoria nas página de Opções
-              </Text>
+              <VStack width={"90%"}>
+                <Text style={styles.title}>
+                  Ainda sem categorias adicionadas
+                </Text>
+                <Text style={styles.title}>
+                  Adicione uma categoria na página de Opções
+                </Text>
+              </VStack>
             </Center>
           ) : (
             asyncCategorys.map((category, index) => (
@@ -86,7 +100,9 @@ export default function HomeScreen() {
                     >
                       <Box style={styles.whiteBox}>
                         <Text>{item.title}</Text>
-                        <Text style={styles.description}>{item.description}</Text>
+                        <Text style={styles.description}>
+                          {item.description}
+                        </Text>
                       </Box>
                     </TouchableOpacity>
                   )}
@@ -110,7 +126,7 @@ export default function HomeScreen() {
                       </TouchableOpacity>
                     </Center>
                   )}
-                  showsHorizontalScrollIndicator={false}
+                  showsHorizontalScrollIndicator={true}
                 />
               </Box>
             ))
@@ -129,7 +145,9 @@ export default function HomeScreen() {
             <Text style={styles.modalText}>Deseja remover este item?</Text>
             <Text style={styles.description}>{selectedItem?.title}</Text>
             <VStack space={4} mt={5}>
-              <Button onPress={removeItem} colorScheme="red">Remover</Button>
+              <Button onPress={removeItem} colorScheme="red">
+                Remover
+              </Button>
               <Button onPress={() => setModalVisible(false)}>Cancelar</Button>
             </VStack>
           </Box>
