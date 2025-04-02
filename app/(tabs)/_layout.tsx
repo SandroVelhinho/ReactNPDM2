@@ -1,32 +1,16 @@
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React from "react";
 import { Platform } from "react-native";
-import {
-  AntDesign,
-  Entypo,
-  EvilIcons,
-  FontAwesome5,
-  Fontisto,
-  Ionicons,
-  Octicons,
-  SimpleLineIcons,
-} from "@expo/vector-icons";
-import { Colors } from "@/constants/Colors";
-import HomeScreen from "./All";
-import Filter from "./Filter";
-import Options from "./Options";
-import { Box } from "native-base";
+import { AntDesign, Entypo, Octicons } from "@expo/vector-icons";
+import { Tabs } from "expo-router";
 
-const Tabs = createBottomTabNavigator();
 export default function TabLayout() {
   return (
-    <Tabs.Navigator
+    <Tabs
       screenOptions={{
         tabBarActiveTintColor: "light",
         headerShown: false,
         tabBarStyle: Platform.select({
           ios: {
-            // Use a transparent background on iOS to show the blur effect
             position: "absolute",
           },
           android: {
@@ -39,7 +23,6 @@ export default function TabLayout() {
     >
       <Tabs.Screen
         name="All"
-        component={HomeScreen}
         options={{
           title: "Todos",
           animation: "fade",
@@ -50,7 +33,6 @@ export default function TabLayout() {
       />
       <Tabs.Screen
         name="Filter"
-        component={Filter}
         options={{
           title: "Filtro",
           animation: "fade",
@@ -61,7 +43,6 @@ export default function TabLayout() {
       />
       <Tabs.Screen
         name="Options"
-        component={Options}
         options={{
           title: "Opções",
           animation: "fade",
@@ -70,6 +51,6 @@ export default function TabLayout() {
           ),
         }}
       />
-    </Tabs.Navigator>
+    </Tabs>
   );
 }

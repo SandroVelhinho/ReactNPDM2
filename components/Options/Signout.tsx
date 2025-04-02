@@ -1,16 +1,34 @@
-import { View, Text, StyleSheet, Pressable } from "react-native";
-import React from "react";
-import { Center, HStack } from "native-base";
+import { useClerk } from "@clerk/clerk-expo";
 import { AntDesign } from "@expo/vector-icons";
+import * as Linking from "expo-linking";
+import { Center, HStack } from "native-base";
+import {
+  Pressable,
+  Text,
+  View,
+  StyleSheet,
+} from "react-native";
 import { useRouter } from "expo-router";
-
-const OptionViewConstuctor = ({ navigate, title }) => {
+export const SignOutButton = () => {
   const router = useRouter();
+  const { signOut } = useClerk();
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      
+      router.replace("/LoginScreen");
+    } catch (err) {
+     
+      console.error(JSON.stringify(err, null, 2));
+    }
+  };
+
   return (
     <View style={styles.viewStyle}>
-      <Pressable onPress={() => router.push(navigate)}>
+      <Pressable onPress={handleSignOut}>
         <HStack space={6} marginLeft={5}>
-          <Text style={styles.title}>{title}</Text>
+          <Text style={styles.title}>Sign-out</Text>
           <Center maxWidth={50}>
             <AntDesign name="arrowright" size={24} color="white" />
           </Center>
@@ -19,7 +37,6 @@ const OptionViewConstuctor = ({ navigate, title }) => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   viewStyle: {
     width: "100%",
@@ -38,14 +55,4 @@ const styles = StyleSheet.create({
     height: 32,
     alignSelf: "center",
   },
-  subtitle: {
-    fontSize: 12,
-    fontWeight: "300",
-    color: "rgba(255, 255, 255, 0.7)",
-    textAlign: "left",
-    width: "auto",
-    height: 18,
-  },
 });
-
-export default OptionViewConstuctor;

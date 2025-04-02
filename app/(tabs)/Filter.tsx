@@ -3,13 +3,14 @@ import { StyleSheet, TouchableOpacity } from "react-native";
 import { blueColor } from "@/constants/Colors";
 import HeaderComp from "@/components/home/HeaderComp";
 import { categorys } from "@/constants/consts";
-import { useFocusEffect, useNavigation } from "expo-router";
+import { useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useRouter } from "expo-router";
 
 export default function Filter() {
-  const navigation = useNavigation();
   const [asyncCategorys, setAsyncCategorys] = useState([]);
+  const router = useRouter();
 
   useFocusEffect(
     useCallback(() => {
@@ -39,9 +40,7 @@ export default function Filter() {
             return (
               <TouchableOpacity
                 style={{ margin: 15 }}
-                onPress={() =>
-                  navigation.navigate("OneCategory", { category: item })
-                }
+                onPress={() => router.push("/OneCategory?category=${item}")}
               >
                 <Center style={styles.button}>
                   <Text style={{ fontSize: 20 }}>{item}</Text>

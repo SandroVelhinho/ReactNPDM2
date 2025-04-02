@@ -4,13 +4,14 @@ import { Box, Button, Input, VStack } from "native-base";
 import BackHeaderComp from "@/components/BackHeaderComp";
 import { blueColor } from "@/constants/Colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useNavigation } from "expo-router";
-const AddNewItem = ({ route }) => {
-  const category = route.params.category;
+import { useRouter } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
+const AddNewItem = () => {
+  const { category } = useLocalSearchParams();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [allItems, setAllItems] = useState([]);
-  const navigation = useNavigation();
+  const router = useRouter();
   useEffect(() => {
     const loadItems = async () => {
       try {
@@ -44,7 +45,7 @@ const AddNewItem = ({ route }) => {
       await AsyncStorage.setItem("to_Dos", JSON.stringify(updatedItems));
       Alert.alert("Sucesso", "Item adicionado com sucesso!");
       setTimeout(() => {
-        navigation.goBack();
+        router.back();
       }, 1500);
     } catch (error) {
       console.error("Erro ao adicionar item:", error);

@@ -9,19 +9,19 @@ import {
   VStack,
 } from "native-base";
 import { AntDesign } from "@expo/vector-icons";
-import { useFocusEffect, useNavigation } from "expo-router";
+import { useFocusEffect } from "expo-router";
 import { blueColor, darkBlueColor } from "@/constants/Colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useCallback, useEffect, useState } from "react";
 import HeaderComp from "@/components/home/HeaderComp";
+import { useRouter } from "expo-router";
 
 export default function HomeScreen() {
-  const navigation = useNavigation();
   const [asyncCategorys, setAsyncCategorys] = useState([]);
   const [allItems, setAllItems] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null); // Armazena o item a ser removido
   const [modalVisible, setModalVisible] = useState(false); // Controle do modal
-
+  const router = useRouter();
   useFocusEffect(
     useCallback(() => {
       const loadCategories = async () => {
@@ -123,9 +123,7 @@ export default function HomeScreen() {
                     <Center alignSelf={"center"} top={5} marginX={10}>
                       <TouchableOpacity
                         onPress={() =>
-                          navigation.navigate("AddNewItem", {
-                            category: category,
-                          })
+                          router.push("/AddNewItem?category=${category}")
                         }
                       >
                         <AntDesign

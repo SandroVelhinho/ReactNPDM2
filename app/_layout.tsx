@@ -1,56 +1,58 @@
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from "@react-navigation/native";
-import { useFonts } from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
-import { StatusBar } from "expo-status-bar";
-import React, { useEffect } from "react";
 import "react-native-reanimated";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import {
-  NavigationContainer,
-  NavigationIndependentTree,
-} from "@react-navigation/native";
-
-import TabLayout from "./(tabs)/_layout";
+import { ClerkProvider } from "@clerk/clerk-expo";
+import { tokenCache } from "@clerk/clerk-expo/token-cache";
+import { useAuth, SignedIn, SignedOut } from "@clerk/clerk-expo";
+import LoginScreen from "./LoginScreen";
+import { Stack, useRouter, useSegments } from "expo-router";
 import { NativeBaseProvider } from "native-base";
-import AddNewItem from "./AddNewItem";
-import OneCategory from "./OneCategory";
-import AddCategorys from "./AddCategorys";
+import { useEffect } from "react";
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-const Stack = createNativeStackNavigator();
-export default function RootLayout() {
+const InitialLayout = () => {
+  const router = useRouter();
+  const segments = useSegments();
+  const { isLoaded, isSignedIn } = useAuth();
+  useEffect(() => {
+    if (!isLoaded) {
+      return;
+    }
+
+    if (isSignedIn) {
+      router.replace("/(tabs)/All");
+    } else {
+      router.replace("/LoginScreen");
+    }
+  }, [SignedIn, isLoaded]);
+
   return (
-    <NavigationIndependentTree>
-      <NativeBaseProvider>
-        <NavigationContainer>
-          <Stack.Navigator>
-            <Stack.Screen
-              name="(tabs)"
-              component={TabLayout}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="OneCategory"
-              component={OneCategory}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="AddNewItem"
-              component={AddNewItem}
-              options={{ headerShown: false }}
-            />
-             <Stack.Screen
-              name="AddCategorys"
-              component={AddCategorys}
-              options={{ headerShown: false }}
-            />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </NativeBaseProvider>
-    </NavigationIndependentTree>
+    <NativeBaseProvider>
+      <SignedIn>
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="OneCategory" options={{ headerShown: false }} />
+          <Stack.Screen name="AddNewItem" options={{ headerShown: false }} />
+          <Stack.Screen name="CreateAccount" options={{ headerShown: false }} />
+          <Stack.Screen name="AddCategorys" options={{ headerShown: false }} />
+        </Stack>
+      </SignedIn>
+      <SignedOut>
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="LoginScreen" options={{ headerShown: false }} />
+          <Stack.Screen name="CreateAccount" options={{ headerShown: false }} />
+        </Stack>
+      </SignedOut>
+    </NativeBaseProvider>
+  );
+};
+
+export default function RootLayout() {
+  const publickey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
+  if (!publickey) {
+    throw new Error("Missing CLERK_PUBLISHABLE_KEY");
+  }
+
+  return (
+    <ClerkProvider tokenCache={tokenCache} publishableKey={publickey}>
+      <InitialLayout />
+    </ClerkProvider>
   );
 }

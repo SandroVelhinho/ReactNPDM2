@@ -6,6 +6,7 @@ import HeaderComp from "@/components/home/HeaderComp";
 import { blueColor } from "@/constants/Colors";
 import OptionViewConstuctor from "@/components/Options/OptionViewConstuctor";
 import { AntDesign } from "@expo/vector-icons";
+import { SignOutButton } from "@/components/Options/Signout";
 
 const Options = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -25,7 +26,7 @@ const Options = () => {
       <HeaderComp title={"Opções"} />
       <ScrollView height={"100%"}>
         <OptionViewConstuctor
-          navigate={"AddCategorys"}
+          navigate={"/AddCategorys"}
           title={"Editar Categorias"}
         />
         <View style={styles.viewStyle}>
@@ -38,6 +39,7 @@ const Options = () => {
             </HStack>
           </Pressable>
         </View>
+        <SignOutButton />
       </ScrollView>
 
       <Modal
